@@ -197,13 +197,6 @@ def main():
     else:
         write_log("OK", "Not in stock")
 
-    # Send WhatsApp log entry after every run
-    try:
-        client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-        send_whatsapp(client, f"{now_utc()} | {PRODUCT_NAME}\nStatus: {'IN STOCK - GO BUY NOW' if is_in_stock(html) else 'Not in stock yet'}")
-    except Exception as e:
-        print(f"  WhatsApp failed: {e}")
-
 
 if __name__ == "__main__":
     main()
