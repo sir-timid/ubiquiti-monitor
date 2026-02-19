@@ -196,14 +196,6 @@ def main():
 
     else:
         write_log("OK", "Not in stock")
-    
-    try:
-        timestamp = now_utc()
-        status = "IN STOCK - GO BUY NOW!" if is_in_stock(html) else "Not in stock yet"
-        send_whatsapp(client, f"{timestamp}\n{PRODUCT_NAME}\nStatus: {status}")
-    except Exception as e:
-        print(f"  WhatsApp failed: {e}")
-
 
 
 if __name__ == "__main__":
