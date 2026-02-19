@@ -133,10 +133,10 @@ def send_sms(client: Client, message: str):
 
 
 def make_call(client: Client, message: str):
-    twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
+    twiml = """<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Say voice="alice" loop="3">
-    {message}. Go buy it now
+    Alert. Ubiquiti G6 Pro Entry is now in stock. Go buy it now.
   </Say>
 </Response>"""
     call = client.calls.create(
