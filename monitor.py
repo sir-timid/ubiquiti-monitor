@@ -182,7 +182,7 @@ def main():
 
         sys.exit(1)
 
-    if is_in_stock(html):
+    if not is_in_stock(html):
         write_log("IN STOCK", "Add to Cart detected — alerts firing!")
 
         alert_message = (
