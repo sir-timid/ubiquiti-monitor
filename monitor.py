@@ -118,7 +118,7 @@ def validate_page(html: str):
 
 
 def is_in_stock(html: str) -> bool:
-    return OUT_OF_STOCK_SIGNAL in html
+    return OUT_OF_STOCK_SIGNAL not in html
 
 
 # ── Alerts ────────────────────────────────────────────────────────────────────
