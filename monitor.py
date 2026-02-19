@@ -136,7 +136,7 @@ def make_call(client: Client, message: str):
     twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Say voice="alice" loop="3">
-    {message}. Go buy it now!
+    {message}. Go buy it now
   </Say>
 </Response>"""
     call = client.calls.create(
@@ -186,8 +186,8 @@ def main():
         write_log("IN STOCK", "Add to Cart detected — alerts firing!")
 
         alert_message = (
-            f"ALERT! {PRODUCT_NAME} is NOW IN STOCK on the Ubiquiti EU store. "
-            f"Go to the store immediately to buy it."
+            f"ALERT {PRODUCT_NAME} is NOW IN STOCK on the Ubiquiti EU store. "
+            f"Go to the store immediately to buy it"
         )
 
         client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
