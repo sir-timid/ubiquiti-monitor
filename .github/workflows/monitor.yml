@@ -44,4 +44,4 @@ jobs:
           # Only commit if there is actually a change (first run creates the file)
           git pull --rebase
           git diff --staged --quiet || git commit -m "chore: update run log [skip ci]"
-          git push
+          git push --force
