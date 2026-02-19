@@ -136,7 +136,7 @@ def make_call(client: Client, message: str):
     twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Say voice="alice" loop="3">
-    Alert. Ubiquiti G6 Pro Entry is now in stock. Go buy it now.
+    {message}. Go buy it now
   </Say>
 </Response>"""
     call = client.calls.create(
