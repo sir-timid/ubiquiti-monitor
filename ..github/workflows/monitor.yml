@@ -1,1 +1,46 @@
+name: Ubiquiti G6 Pro Entry Stock Monitor
 
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+# Allow the workflow to commit the log file back to the repo
+permissions:
+  contents: write
+
+jobs:
+  check-stock:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests twilio
+
+      - name: Run stock monitor
+        env:
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_FROM_NUMBER: ${{ secrets.TWILIO_FROM_NUMBER }}
+          YOUR_PHONE_NUMBER: ${{ secrets.YOUR_PHONE_NUMBER }}
+        run: python monitor.py
+
+      - name: Commit run log
+        # Always run this step — even if the monitor script failed (exit 1)
+        # so the error is recorded in the log file in the repo.
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add run-log.txt
+          # Only commit if there is actually a change (first run creates the file)
+          git diff --staged --quiet || git commit -m "chore: update run log [skip ci]"
+          git push
