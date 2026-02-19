@@ -191,7 +191,7 @@ def main():
         )
 
         client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-        send_sms(client, f"{alert_message}\n\n{PRODUCT_URL}")
+        #send_sms(client, f"{alert_message}\n\n{PRODUCT_URL}")
         make_call(client, alert_message)
 
     else:
