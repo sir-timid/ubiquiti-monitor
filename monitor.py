@@ -26,6 +26,7 @@ TWILIO_ACCOUNT_SID = os.environ["TWILIO_ACCOUNT_SID"]
 TWILIO_AUTH_TOKEN  = os.environ["TWILIO_AUTH_TOKEN"]
 TWILIO_FROM_NUMBER = os.environ["TWILIO_FROM_NUMBER"]
 YOUR_PHONE_NUMBER  = os.environ["YOUR_PHONE_NUMBER"]
+TWILIO_WHATSAPP_NUMBER = "whatsapp:+14155238886"
 
 PRODUCT_URL  = (
     "https://eu.store.ui.com/eu/en/category/door-access-readers"
@@ -159,6 +160,14 @@ def send_error_sms(client: Client, error_message: str):
     )
     print(f"  Error SMS sent: {msg.sid}")
 
+def send_whatsapp(client: Client, message: str):
+    msg = client.messages.create(
+        body=message,
+        from_=TWILIO_WHATSAPP_NUMBER,
+        to=f"whatsapp:{YOUR_PHONE_NUMBER}",
+    )
+    print(f"  WhatsApp sent: {msg.sid}")
+
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
@@ -196,6 +205,13 @@ def main():
 
     else:
         write_log("OK", "Not in stock")
+
+    # Send WhatsApp log entry after every run
+    try:
+        client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+        send_whatsapp(client, f"{now_utc()} | {PRODUCT_NAME}\nStatus: {'IN STOCK - GO BUY NOW' if is_in_stock(html) else 'Not in stock yet'}")
+    except Exception as e:
+        print(f"  WhatsApp failed: {e}")
 
 
 if __name__ == "__main__":
