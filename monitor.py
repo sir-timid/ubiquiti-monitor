@@ -40,7 +40,7 @@ LOG_FILE     = "run-log.txt"
 SANITY_STRING = "UVC-G6-Pro-Entry"
 
 # What we look for to confirm in-stock status
-IN_STOCK_SIGNAL = "Add to Cart"
+OUT_OF_STOCK_SIGNAL = "back in stock emails"
 
 # Jitter: sleep a random number of seconds before fetching (reduces fingerprinting)
 JITTER_MIN_SECONDS = 5
@@ -118,7 +118,7 @@ def validate_page(html: str):
 
 
 def is_in_stock(html: str) -> bool:
-    return IN_STOCK_SIGNAL in html
+    return OUT_OF_STOCK_SIGNAL in html
 
 
 # ── Alerts ────────────────────────────────────────────────────────────────────
