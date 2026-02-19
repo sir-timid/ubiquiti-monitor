@@ -40,8 +40,8 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase
           git add run-log.txt
           # Only commit if there is actually a change (first run creates the file)
-          git pull --rebase
           git diff --staged --quiet || git commit -m "chore: update run log [skip ci]"
           git push --force
