@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-“””
+"""
 Ubiquiti G6 Pro Entry stock monitor.
 Checks the product page every run and triggers Twilio call + Telegram message.
-“””
+"""
 
 import os
 import sys
@@ -14,44 +14,44 @@ from twilio.rest import Client
 
 # ── Configuration (set these as GitHub Actions secrets / env variables) ───────
 
-TWILIO_ACCOUNT_SID = os.environ[“TWILIO_ACCOUNT_SID”]
-TWILIO_AUTH_TOKEN  = os.environ[“TWILIO_AUTH_TOKEN”]
-TWILIO_FROM_NUMBER = os.environ[“TWILIO_FROM_NUMBER”]
-YOUR_PHONE_NUMBER  = os.environ[“YOUR_PHONE_NUMBER”]
-TELEGRAM_TOKEN     = os.environ[“TELEGRAM_TOKEN”]
-TELEGRAM_CHAT_ID   = os.environ[“TELEGRAM_CHAT_ID”]
+TWILIO_ACCOUNT_SID = os.environ["TWILIO_ACCOUNT_SID"]
+TWILIO_AUTH_TOKEN  = os.environ["TWILIO_AUTH_TOKEN"]
+TWILIO_FROM_NUMBER = os.environ["TWILIO_FROM_NUMBER"]
+YOUR_PHONE_NUMBER  = os.environ["YOUR_PHONE_NUMBER"]
+TELEGRAM_TOKEN     = os.environ["TELEGRAM_TOKEN"]
+TELEGRAM_CHAT_ID   = os.environ["TELEGRAM_CHAT_ID"]
 
 PRODUCT_URL  = (
-“https://eu.store.ui.com/eu/en/category/door-access-readers”
-“/collections/doorbell-entry/products/uvc-g6-pro-entry”
-“?variant=uvc-g6-pro-entry”
+"https://eu.store.ui.com/eu/en/category/door-access-readers"
+"/collections/doorbell-entry/products/uvc-g6-pro-entry"
+"?variant=uvc-g6-pro-entry"
 )
-PRODUCT_NAME        = “Ubiquiti G6 Pro Entry”
-LOG_FILE            = “run-log.txt”
-SANITY_STRING       = “UVC-G6-Pro-Entry”
-OUT_OF_STOCK_SIGNAL = “back in stock emails”
+PRODUCT_NAME        = "Ubiquiti G6 Pro Entry"
+LOG_FILE            = "run-log.txt"
+SANITY_STRING       = "UVC-G6-Pro-Entry"
+OUT_OF_STOCK_SIGNAL = "back in stock emails"
 
 JITTER_MIN_SECONDS = 5
 JITTER_MAX_SECONDS = 55
 
 USER_AGENTS = [
-“Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36”,
-“Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36”,
-“Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0”,
-“Mozilla/5.0 (Macintosh; Intel Mac OS X 14.3; rv:122.0) Gecko/20100101 Firefox/122.0”,
-“Mozilla/5.0 (Macintosh; Intel Mac OS X 14_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15”,
-“Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0”,
+"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0",
+"Mozilla/5.0 (Macintosh; Intel Mac OS X 14.3; rv:122.0) Gecko/20100101 Firefox/122.0",
+"Mozilla/5.0 (Macintosh; Intel Mac OS X 14_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15",
+"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0",
 ]
 
 # ── Logging ───────────────────────────────────────────────────────────────────
 
 def now_utc() -> str:
-return datetime.datetime.utcnow().strftime(”%Y-%m-%d %H:%M:%S UTC”)
+return datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
 
 def write_log(status: str, message: str):
-line = f”{now_utc()} | {status:<10} | {message}\n”
+line = f"{now_utc()} | {status:<10} | {message}\n"
 print(line.strip())
-with open(LOG_FILE, “a”) as f:
+with open(LOG_FILE, "a") as f:
 f.write(line)
 
 # ── Fetching ──────────────────────────────────────────────────────────────────
@@ -59,13 +59,13 @@ f.write(line)
 def fetch_page(url: str) -> str:
 user_agent = random.choice(USER_AGENTS)
 headers = {
-“User-Agent”: user_agent,
-“Accept”: “text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8”,
-“Accept-Language”: “en-US,en;q=0.9”,
-“Accept-Encoding”: “gzip, deflate, br”,
-“DNT”: “1”,
-“Connection”: “keep-alive”,
-“Upgrade-Insecure-Requests”: “1”,
+"User-Agent": user_agent,
+"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+"Accept-Language": "en-US,en;q=0.9",
+"Accept-Encoding": "gzip, deflate, br",
+"DNT": "1",
+"Connection": "keep-alive",
+"Upgrade-Insecure-Requests": "1",
 }
 
 ```
@@ -90,10 +90,10 @@ return response.text
 
 def validate_page(html: str):
 if SANITY_STRING not in html:
-snippet = html[:300].replace(”\n”, “ “).strip()
+snippet = html[:300].replace("\n", " ").strip()
 raise RuntimeError(
-f”CAPTCHA or block page detected - ‘{SANITY_STRING}’ not found. “
-f”Page starts with: {snippet!r}”
+f"CAPTCHA or block page detected - ‘{SANITY_STRING}’ not found. "
+f"Page starts with: {snippet!r}"
 )
 
 def is_in_stock(html: str) -> bool:
@@ -102,34 +102,34 @@ return OUT_OF_STOCK_SIGNAL not in html
 # ── Alerts ────────────────────────────────────────────────────────────────────
 
 def send_telegram(message: str):
-url = f”https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage”
+url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
 response = requests.post(url, json={
-“chat_id”: TELEGRAM_CHAT_ID,
-“text”: message,
-“parse_mode”: “HTML”
+"chat_id": TELEGRAM_CHAT_ID,
+"text": message,
+"parse_mode": "HTML"
 }, timeout=10)
 response.raise_for_status()
-print(f”  Telegram sent: {response.json()[‘result’][‘message_id’]}”)
+print(f"  Telegram sent: {response.json()[‘result’][‘message_id’]}")
 
 def make_call(client: Client, message: str):
-twiml = “””<?xml version="1.0" encoding="UTF-8"?>
+twiml = """<?xml version="1.0" encoding="UTF-8"?>
 <Response>
 <Say voice="alice" loop="3">
 Alert. Ubiquiti G6 Pro Entry is now in stock. Go buy it now.
 </Say>
-</Response>”””
+</Response>"""
 call = client.calls.create(
 twiml=twiml,
 from_=TWILIO_FROM_NUMBER,
 to=YOUR_PHONE_NUMBER,
 )
-print(f”  Call initiated: {call.sid}”)
+print(f"  Call initiated: {call.sid}")
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
 jitter = random.randint(JITTER_MIN_SECONDS, JITTER_MAX_SECONDS)
-print(f”Sleeping {jitter}s (jitter) before fetching…”)
+print(f"Sleeping {jitter}s (jitter) before fetching…")
 time.sleep(jitter)
 
 ```
@@ -173,5 +173,5 @@ except Exception as e:
     print(f"  Telegram status failed: {e}")
 ```
 
-if **name** == “**main**”:
+if **name** == "**main**":
 main()
