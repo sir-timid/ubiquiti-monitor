@@ -5,7 +5,6 @@ on:
     - cron: "*/5 * * * *"
   workflow_dispatch:
 
-# Allow the workflow to commit the log file back to the repo
 permissions:
   contents: write
 
@@ -35,10 +34,6 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python monitor.py
 
-
-          
-        run: python monitor.py
-        
       - name: Commit run log
         if: always()
         run: |
@@ -47,5 +42,5 @@ jobs:
           git fetch origin main
           git reset --soft origin/main
           git add run-log.txt
-          git diff --staged --quiet || git commit -m "chore: update run log [skip ci]"            
+          git diff --staged --quiet || git commit -m "chore: update run log [skip ci]"
           git push --force
