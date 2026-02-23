@@ -150,7 +150,7 @@ def main():
 
     client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
-    if is_in_stock(html):
+    if not is_in_stock(html):
         write_log("IN STOCK", "Add to Cart detected - alerts firing!")
         # Phone call via Twilio
         try:
