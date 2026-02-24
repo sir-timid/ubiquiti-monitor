@@ -100,3 +100,4 @@
 2026-02-22 20:38:45 UTC | OK         | Not in stock
 2026-02-22 20:58:58 UTC | OK         | Not in stock
 2026-02-23 09:11:33 UTC | IN STOCK   | Add to Cart detected - alerts firing!
+2026-02-24 10:56:48 UTC | IN STOCK   | Add to Cart detected - alerts firing!
